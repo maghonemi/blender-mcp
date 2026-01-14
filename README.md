@@ -124,7 +124,9 @@ export BLENDER_PORT=9876
 
 [Watch the setup instruction video](https://www.youtube.com/watch?v=neoK_WMq92g) (Assuming you have already installed uv)
 
-Go to Claude > Settings > Developer > Edit Config > claude_desktop_config.json to include the following:
+Go to Claude > Settings > Developer > Edit Config > claude_desktop_config.json
+
+**If this is your first MCP server**, add:
 
 ```json
 {
@@ -138,6 +140,32 @@ Go to Claude > Settings > Developer > Edit Config > claude_desktop_config.json t
     }
 }
 ```
+
+**If you already have other MCP servers** (like filesystem), add the blender server to your existing config:
+
+```json
+{
+    "mcpServers": {
+        "blender": {
+            "command": "uvx",
+            "args": [
+                "blender-mcp"
+            ]
+        },
+        "filesystem": {
+            "command": "npx",
+            "args": [
+              "-y",
+              "@modelcontextprotocol/server-filesystem",
+              "/path/to/directory1",
+              "/path/to/directory2"
+            ]
+        }
+    }
+}
+```
+
+See [MCP_CONFIG_WITH_FILESYSTEM.md](MCP_CONFIG_WITH_FILESYSTEM.md) for detailed instructions on adding Blender MCP to existing configurations.
 
 ### Cursor integration
 
