@@ -171,11 +171,12 @@ See [MCP_CONFIG_WITH_FILESYSTEM.md](MCP_CONFIG_WITH_FILESYSTEM.md) for detailed 
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=blender&config=eyJjb21tYW5kIjoidXZ4IGJsZW5kZXItbWNwIn0%3D)
 
-For Mac users, go to Settings > MCP and paste the following 
+**For Mac users:**
 
-- To use as a global server, use "add new global MCP server" button and paste
-- To use as a project specific server, create `.cursor/mcp.json` in the root of the project and paste
+- To use as a global server, go to Settings > MCP > Add Server
+- To use as a project specific server, create `.cursor/mcp.json` in the root of the project
 
+**If this is your first MCP server**, use:
 
 ```json
 {
@@ -184,6 +185,30 @@ For Mac users, go to Settings > MCP and paste the following
             "command": "uvx",
             "args": [
                 "blender-mcp"
+            ]
+        }
+    }
+}
+```
+
+**If you already have other MCP servers**, add the blender server to your existing config:
+
+```json
+{
+    "mcpServers": {
+        "blender": {
+            "command": "uvx",
+            "args": [
+                "blender-mcp"
+            ]
+        },
+        "filesystem": {
+            "command": "npx",
+            "args": [
+              "-y",
+              "@modelcontextprotocol/server-filesystem",
+              "/path/to/directory1",
+              "/path/to/directory2"
             ]
         }
     }
