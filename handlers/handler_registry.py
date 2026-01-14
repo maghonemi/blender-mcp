@@ -48,6 +48,14 @@ from handlers.rigging.bones import (
     CreateBoneHandler,
     GetBoneInfoHandler
 )
+from handlers.rigging.skinning import (
+    ParentToArmatureHandler,
+    AutoWeightAssignHandler
+)
+from handlers.rigging.auto_rig import (
+    RigHandHandler,
+    RigBodyHandler
+)
 
 # Modeling handlers
 from handlers.modeling.mesh_edit import (
@@ -128,6 +136,10 @@ def register_all_handlers():
     command_router.register_handler(GetArmatureInfoHandler())
     command_router.register_handler(CreateBoneHandler())
     command_router.register_handler(GetBoneInfoHandler())
+    command_router.register_handler(ParentToArmatureHandler())
+    command_router.register_handler(AutoWeightAssignHandler())
+    command_router.register_handler(RigHandHandler())
+    command_router.register_handler(RigBodyHandler())
     
     # Modeling handlers
     command_router.register_handler(CreatePrimitiveHandler())
