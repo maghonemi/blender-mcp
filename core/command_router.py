@@ -82,7 +82,9 @@ class CommandRouter:
             return handler.handle(command)
             
         except Exception as e:
-            logger.exception(f"Error routing command: {str(e)}")
+            command_type = command.get("type", "unknown") if isinstance(command, dict) else "unknown"
+            logger.error(f"Exception routing command '{command_type}': {str(e)}")
+            logger.exception("Command routing error details:")
             return ResponseBuilder.error(
                 error_code=ErrorCode.UNKNOWN_ERROR.value,
                 message=f"Error routing command: {str(e)}",
