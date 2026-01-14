@@ -329,6 +329,9 @@ class GetObjectActionHandler(BaseHandler):
 
         frame_range = action.frame_range
 
+        # Check if fcurves attribute exists (Blender version compatibility)
+        fcurve_count = len(action.fcurves) if hasattr(action, 'fcurves') else 0
+
         return {
             "object_name": object_name,
             "has_animation_data": True,
@@ -336,6 +339,6 @@ class GetObjectActionHandler(BaseHandler):
                 "name": action.name,
                 "frame_start": frame_range[0],
                 "frame_end": frame_range[1],
-                "fcurve_count": len(action.fcurves)
+                "fcurve_count": fcurve_count
             }
         }

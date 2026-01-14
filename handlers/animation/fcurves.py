@@ -39,6 +39,15 @@ class GetFCurvesHandler(BaseHandler):
         fcurves_info = []
         action = obj.animation_data.action
 
+        # Check if fcurves attribute exists (Blender version compatibility)
+        if not hasattr(action, 'fcurves'):
+            return {
+                "object_name": object_name,
+                "fcurves": [],
+                "count": 0,
+                "message": "Action does not have fcurves attribute (may need to update Blender or action)"
+            }
+
         for fcurve in action.fcurves:
             # Filter by data path if specified
             if data_path_filter and data_path_filter not in fcurve.data_path:
