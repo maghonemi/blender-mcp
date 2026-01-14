@@ -1,10 +1,13 @@
 # Code created by Siddharth Ahuja: www.github.com/ahujasid © 2025
+# Version: 2.0.2 - Fixed bone handler for Blender 5.0
 
 import bpy
 from typing import Dict, Any
 from handlers.base_handler import BaseHandler
-from utils.validation import validate_object_exists
 from utils.logger import logger
+
+HANDLER_VERSION = "2.0.2"
+
 
 class CreateBoneHandler(BaseHandler):
     """Handler for creating bones"""
@@ -14,31 +17,12 @@ class CreateBoneHandler(BaseHandler):
     
     def get_parameter_schema(self) -> Dict[str, Dict[str, Any]]:
         return {
-            "armature_name": {
-                "type": str,
-                "required": True,
-                "validator": validate_object_exists
-            },
-            "bone_name": {
-                "type": str,
-                "required": True
-            },
-            "head": {
-                "type": list,
-                "required": True
-            },
-            "tail": {
-                "type": list,
-                "required": True
-            },
-            "parent": {
-                "type": str,
-                "required": False
-            },
-            "roll": {
-                "type": (int, float),
-                "required": False
-            }
+            "armature_name": {"type": str, "required": True},
+            "bone_name": {"type": str, "required": True},
+            "head": {"type": list, "required": True},
+            "tail": {"type": list, "required": True},
+            "parent": {"type": str, "required": False},
+            "roll": {"type": float, "required": False}
         }
     
     def execute(self, params: Dict[str, Any]) -> Any:
@@ -54,45 +38,40 @@ class CreateBoneHandler(BaseHandler):
         if not armature or armature.type != 'ARMATURE':
             raise ValueError(f"Armature '{armature_name}' not found")
         
-        # Set active and enter edit mode
+        # Enter edit mode
         bpy.context.view_layer.objects.active = armature
         bpy.ops.object.mode_set(mode='EDIT')
         
-        # Create bone
-        bone = armature.data.edit_bones.new(bone_name)
-        bone.head = head
-        bone.tail = tail
-        bone.roll = roll
-        
-        # Set parent if provided
-        if parent:
-            parent_bone = armature.data.edit_bones.get(parent)
-            if parent_bone:
-                bone.parent = parent_bone
+        try:
+            bone = armature.data.edit_bones.new(bone_name)
+            bone.head = head
+            bone.tail = tail
+            bone.roll = roll
+            
+            if parent:
+                parent_bone = armature.data.edit_bones.get(parent)
+                if parent_bone:
+                    bone.parent = parent_bone
+        finally:
+            bpy.ops.object.mode_set(mode='OBJECT')
         
         return {"bone_created": True, "bone_name": bone_name}
 
+
 class GetBoneInfoHandler(BaseHandler):
-    """Handler for getting bone information"""
+    """Handler for getting bone information - works in object mode"""
     
     def get_command_name(self) -> str:
         return "get_bone_info"
     
     def get_parameter_schema(self) -> Dict[str, Dict[str, Any]]:
         return {
-            "armature_name": {
-                "type": str,
-                "required": True,
-                "validator": validate_object_exists
-            },
-            "bone_name": {
-                "type": str,
-                "required": True
-            }
+            "armature_name": {"type": str, "required": True},
+            "bone_name": {"type": str, "required": True}
         }
     
     def execute(self, params: Dict[str, Any]) -> Any:
-        """Get bone information"""
+        """Get bone information safely"""
         armature_name = params["armature_name"]
         bone_name = params["bone_name"]
         
@@ -100,41 +79,53 @@ class GetBoneInfoHandler(BaseHandler):
         if not armature or armature.type != 'ARMATURE':
             raise ValueError(f"Armature '{armature_name}' not found")
         
-        # Try to get bone from bones (object mode) or edit_bones (edit mode)
+        # Get bone from armature data
         bone = armature.data.bones.get(bone_name)
-        edit_bone = None
-        
         if not bone:
-            # Try edit_bones if in edit mode
-            edit_bone = armature.data.edit_bones.get(bone_name) if armature.data.edit_bones else None
-            if not edit_bone:
-                raise ValueError(f"Bone '{bone_name}' not found")
+            raise ValueError(f"Bone '{bone_name}' not found")
         
-        # Use bone or edit_bone
-        bone_obj = bone if bone else edit_bone
-        
-        # Get roll - might not be available on all bone types
-        try:
-            roll = bone_obj.roll if hasattr(bone_obj, 'roll') else 0.0
-        except:
-            roll = 0.0
-        
-        # Get matrix - might not be available on edit_bones
-        try:
-            if hasattr(bone_obj, 'matrix_local'):
-                matrix = [list(row) for row in bone_obj.matrix_local]
-            else:
-                matrix = None
-        except:
-            matrix = None
-        
-        return {
-            "name": bone_obj.name,
-            "parent": bone_obj.parent.name if bone_obj.parent else None,
-            "children": [child.name for child in bone_obj.children],
-            "head": [bone_obj.head.x, bone_obj.head.y, bone_obj.head.z],
-            "tail": [bone_obj.tail.x, bone_obj.tail.y, bone_obj.tail.z],
-            "length": bone_obj.length,
-            "roll": roll,
-            "matrix": matrix
+        # Get basic info that's always available
+        result = {
+            "name": bone.name,
+            "parent": bone.parent.name if bone.parent else None,
+            "children": [c.name for c in bone.children],
+            "length": bone.length
         }
+        
+        # Get head/tail - use head_local/tail_local which are always available
+        try:
+            result["head"] = [bone.head_local.x, bone.head_local.y, bone.head_local.z]
+            result["tail"] = [bone.tail_local.x, bone.tail_local.y, bone.tail_local.z]
+        except Exception as e:
+            logger.warning(f"Could not get head/tail: {e}")
+            result["head"] = [0, 0, 0]
+            result["tail"] = [0, 1, 0]
+        
+        # Get roll - need to enter edit mode briefly
+        result["roll"] = 0.0
+        try:
+            current_active = bpy.context.view_layer.objects.active
+            bpy.context.view_layer.objects.active = armature
+            bpy.ops.object.mode_set(mode='EDIT')
+            
+            try:
+                edit_bone = armature.data.edit_bones.get(bone_name)
+                if edit_bone:
+                    result["roll"] = edit_bone.roll
+            finally:
+                bpy.ops.object.mode_set(mode='OBJECT')
+                if current_active:
+                    bpy.context.view_layer.objects.active = current_active
+        except Exception as e:
+            logger.warning(f"Could not get roll: {e}")
+        
+        # Get matrix if available
+        try:
+            if hasattr(bone, 'matrix_local'):
+                result["matrix"] = [list(row) for row in bone.matrix_local]
+            else:
+                result["matrix"] = None
+        except:
+            result["matrix"] = None
+        
+        return result
