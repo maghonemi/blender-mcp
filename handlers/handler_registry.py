@@ -15,6 +15,7 @@ from handlers.scene.object_ops import (
     GetViewportScreenshotHandler,
     ExecuteCodeHandler
 )
+from handlers.scene.project_setup import SetupProjectHandler
 
 # Animation handlers - Core
 from handlers.animation.keyframes import (
@@ -265,6 +266,7 @@ def register_all_handlers():
     command_router.register_handler(GetObjectInfoHandler())
     command_router.register_handler(GetViewportScreenshotHandler())
     command_router.register_handler(ExecuteCodeHandler())
+    command_router.register_handler(SetupProjectHandler())
 
     # Animation handlers - Core
     command_router.register_handler(CreateKeyframeHandler())

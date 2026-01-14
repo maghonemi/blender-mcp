@@ -172,18 +172,56 @@ class ExecuteCodeHandler(BaseHandler):
         code = params["code"]
         
         try:
-            # Create a local namespace for execution
-            namespace = {"bpy": bpy, "__builtins__": __builtins__}
+            # Import common modules for convenience
+            import os
+            import sys
+            import math
+            import mathutils
             
-            # Capture stdout during execution
+            # Create a local namespace for execution with common imports
+            namespace = {
+                "bpy": bpy,
+                "os": os,
+                "sys": sys,
+                "math": math,
+                "mathutils": mathutils,
+                "__builtins__": __builtins__
+            }
+            
+            # Capture stdout and stderr during execution
             import io
-            from contextlib import redirect_stdout
+            from contextlib import redirect_stdout, redirect_stderr
             capture_buffer = io.StringIO()
+            error_buffer = io.StringIO()
             
-            with redirect_stdout(capture_buffer):
-                exec(code, namespace)
+            try:
+                with redirect_stdout(capture_buffer), redirect_stderr(error_buffer):
+                    exec(code, namespace)
+            except Exception as exec_error:
+                # Capture the exception details
+                import traceback
+                error_trace = traceback.format_exc()
+                error_output = error_buffer.getvalue()
+                stdout_output = capture_buffer.getvalue()
+                
+                # Return detailed error information
+                error_msg = f"Code execution error: {str(exec_error)}"
+                if error_trace:
+                    error_msg += f"\nTraceback:\n{error_trace}"
+                if error_output:
+                    error_msg += f"\nStderr: {error_output}"
+                
+                raise Exception(error_msg)
             
             captured_output = capture_buffer.getvalue()
-            return {"executed": True, "result": captured_output}
+            error_output = error_buffer.getvalue()
+            
+            # Combine stdout and stderr
+            full_output = captured_output
+            if error_output:
+                full_output += f"\n[Stderr]: {error_output}"
+            
+            return {"executed": True, "result": full_output}
         except Exception as e:
+            # Re-raise with more context
             raise Exception(f"Code execution error: {str(e)}")
