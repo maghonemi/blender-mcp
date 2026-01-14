@@ -38,8 +38,8 @@
             "args": [
               "-y",
               "@modelcontextprotocol/server-filesystem",
-              "/Users/maghonemi/Desktop",
-              "/Users/maghonemi/Downloads"
+              "/path/to/your/Desktop",
+              "/path/to/your/Downloads"
             ]
         }
     }
@@ -119,8 +119,8 @@ Cursor will automatically use the Blender MCP tools when you mention Blender-rel
             "args": [
               "-y",
               "@modelcontextprotocol/server-filesystem",
-              "/Users/maghonemi/Desktop",
-              "/Users/maghonemi/Downloads"
+              "/path/to/your/Desktop",
+              "/path/to/your/Downloads"
             ]
         }
     }

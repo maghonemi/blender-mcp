@@ -104,10 +104,11 @@ If you want to keep files in the original location:
 mkdir -p ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp
 
 # Create symbolic links
-ln -s /Users/maghonemi/Desktop/blender-mcp-main/addon_new.py ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/__init__.py
-ln -s /Users/maghonemi/Desktop/blender-mcp-main/core ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/
-ln -s /Users/maghonemi/Desktop/blender-mcp-main/handlers ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/
-ln -s /Users/maghonemi/Desktop/blender-mcp-main/utils ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/
+# Replace /path/to/blender-mcp-main with your actual project directory
+ln -s /path/to/blender-mcp-main/addon_new.py ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/__init__.py
+ln -s /path/to/blender-mcp-main/core ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/
+ln -s /path/to/blender-mcp-main/handlers ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/
+ln -s /path/to/blender-mcp-main/utils ~/Library/Application\ Support/Blender/[version]/scripts/addons/blender_mcp/
 ```
 
 ## Why This Matters

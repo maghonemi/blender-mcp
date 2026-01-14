@@ -29,10 +29,11 @@
 
 ## File Copied
 
-The fixed `addon_new.py` has been copied to:
+The fixed `addon_new.py` should be copied to:
 ```
-/Users/maghonemi/Library/Application Support/Blender/5.0/scripts/addons/addon_new.py
+~/Library/Application Support/Blender/[version]/scripts/addons/addon_new.py
 ```
+Replace `[version]` with your Blender version (e.g., `5.0`, `4.0`, `3.6`)
 
 ## How to Test in Blender
 
@@ -93,8 +94,9 @@ All checks passed:
 
 2. **Check the file was copied correctly**:
    ```
-   ls -la "/Users/maghonemi/Library/Application Support/Blender/5.0/scripts/addons/addon_new.py"
+   ls -la ~/Library/Application\ Support/Blender/[version]/scripts/addons/addon_new.py
    ```
+   Replace `[version]` with your Blender version
 
 3. **Enable console before loading addon**:
    - Window > Toggle System Console

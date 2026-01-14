@@ -28,8 +28,8 @@ Edit `claude_desktop_config.json`:
             "args": [
               "-y",
               "@modelcontextprotocol/server-filesystem",
-              "/Users/maghonemi/Desktop",
-              "/Users/maghonemi/Downloads"
+              "/path/to/your/Desktop",
+              "/path/to/your/Downloads"
             ]
         }
     }
@@ -56,8 +56,8 @@ Go to **Settings > MCP > Add Server** and add:
             "args": [
               "-y",
               "@modelcontextprotocol/server-filesystem",
-              "/Users/maghonemi/Desktop",
-              "/Users/maghonemi/Downloads"
+              "/path/to/your/Desktop",
+              "/path/to/your/Downloads"
             ]
         }
     }
@@ -82,8 +82,8 @@ Create `.cursor/mcp.json` in your project root:
             "args": [
               "-y",
               "@modelcontextprotocol/server-filesystem",
-              "/Users/maghonemi/Desktop",
-              "/Users/maghonemi/Downloads"
+              "/path/to/your/Desktop",
+              "/path/to/your/Downloads"
             ]
         }
     }
@@ -112,7 +112,7 @@ After restarting, you should see both servers available:
 - Check Blender console for errors
 
 ### "Filesystem server not working"
-- Verify the paths exist: `/Users/maghonemi/Desktop` and `/Users/maghonemi/Downloads`
+- Verify the paths exist (replace with your actual paths in the config): `/path/to/your/Desktop` and `/path/to/your/Downloads`
 - Check that `npx` is available: `which npx`
 - Check Cursor/Claude console for filesystem errors
 
@@ -137,8 +137,8 @@ You can add multiple MCP servers:
             "args": [
               "-y",
               "@modelcontextprotocol/server-filesystem",
-              "/Users/maghonemi/Desktop",
-              "/Users/maghonemi/Downloads"
+              "/path/to/your/Desktop",
+              "/path/to/your/Downloads"
             ]
         },
         "another-server": {
