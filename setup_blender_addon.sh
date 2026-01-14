@@ -66,6 +66,11 @@ echo "$VERSIONS_TO_INSTALL" | while read version_dir; do
     cp -r "$SOURCE_DIR/handlers" "$ADDON_DIR/"
     cp -r "$SOURCE_DIR/utils" "$ADDON_DIR/"
     
+    # Copy ui directory if it exists
+    if [ -d "$SOURCE_DIR/ui" ]; then
+        cp -r "$SOURCE_DIR/ui" "$ADDON_DIR/"
+    fi
+    
     echo "  ✓ Installed to: $ADDON_DIR"
     echo ""
 done
@@ -80,5 +85,5 @@ echo "2. Go to Edit > Preferences > Add-ons"
 echo "3. Search for 'Blender MCP'"
 echo "4. Enable it (check the box)"
 echo "5. Restart Blender completely"
-echo "6. Check console for: 'Registered 28 handlers'"
+echo "6. Check console for: 'Registered X handlers' (should be 80+ with all features)"
 echo ""
