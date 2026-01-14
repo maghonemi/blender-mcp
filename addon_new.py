@@ -601,7 +601,29 @@ def register():
     # Register all new handlers (only if modular system is available)
     if MODULAR_SYSTEM_AVAILABLE and register_all_handlers is not None:
         try:
+            print("BlenderMCP: Calling register_all_handlers()...")
             register_all_handlers()
+            
+            # Verify handlers were registered
+            try:
+                from core.command_router import command_router
+                registered_commands = command_router.get_registered_commands()
+                print(f"BlenderMCP: Registered {len(registered_commands)} handlers")
+                print(f"BlenderMCP: Commands: {', '.join(sorted(registered_commands))}")
+                
+                # Check for specific handlers
+                if "get_render_settings" in registered_commands:
+                    print("BlenderMCP: ✓ Render handlers registered")
+                else:
+                    print("BlenderMCP: ✗ Render handlers NOT registered")
+                
+                if "get_sketchfab_status" in registered_commands:
+                    print("BlenderMCP: ✓ Sketchfab handlers registered")
+                else:
+                    print("BlenderMCP: ✗ Sketchfab handlers NOT registered")
+            except Exception as verify_error:
+                print(f"BlenderMCP: Could not verify handlers: {verify_error}")
+            
             logger.info("All handlers registered successfully")
             print("BlenderMCP: All handlers registered successfully")
         except Exception as e:
@@ -612,6 +634,10 @@ def register():
             traceback.print_exc()
     else:
         print("BlenderMCP: Modular system not available - using basic functionality")
+        if not MODULAR_SYSTEM_AVAILABLE:
+            print("BlenderMCP: MODULAR_SYSTEM_AVAILABLE = False")
+        if register_all_handlers is None:
+            print("BlenderMCP: register_all_handlers is None")
 
     logger.info("BlenderMCP addon registered (v2.0)")
     print("BlenderMCP addon registered (v2.0)")

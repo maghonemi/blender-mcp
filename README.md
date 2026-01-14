@@ -57,6 +57,30 @@ The system consists of two main components:
 
 ## Installation
 
+### ⚡ Quick Install (Recommended)
+
+**For macOS/Linux users, use the automated setup script:**
+
+```bash
+cd blender-mcp-main
+./setup_blender_addon.sh
+```
+
+This script will:
+- Find your Blender installation automatically
+- Create the proper directory structure
+- Copy all necessary files
+- Set up the addon correctly
+
+After running the script:
+1. Open Blender
+2. Go to **Edit > Preferences > Add-ons**
+3. Search for **"Blender MCP"**
+4. **Enable** it (check the box)
+5. Restart Blender completely
+6. Check console for: `Registered 28 handlers` (or more)
+
+**For manual installation, see [INSTALLATION_DIRECTORY_SETUP.md](INSTALLATION_DIRECTORY_SETUP.md)**
 
 ### Prerequisites
 

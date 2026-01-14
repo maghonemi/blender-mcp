@@ -54,6 +54,15 @@ class BaseHandler(ABC):
             logger.info(f"Executing command: {self.get_command_name()}")
             result = self.execute(params)
             
+            # Check if result contains an error (for handlers that return {"error": "..."} format)
+            if isinstance(result, dict) and "error" in result:
+                error_msg = result.get("error", "Unknown error")
+                return self.response_builder.error(
+                    error_code=ErrorCode.API_ERROR.value,
+                    message=error_msg,
+                    suggestions=["Check API configuration", "Verify API key is correct"]
+                )
+            
             # Build success response
             return self.response_builder.success(result)
             

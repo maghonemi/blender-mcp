@@ -55,6 +55,48 @@ from handlers.modeling.mesh_edit import (
     ExtrudeMeshHandler
 )
 
+# Rendering handlers
+RENDERING_AVAILABLE = False
+try:
+    from handlers.rendering.render_settings import (
+        SetRenderOutputHandler,
+        GetRenderSettingsHandler
+    )
+    RENDERING_AVAILABLE = True
+    logger.info("Rendering handlers imported successfully")
+except ImportError as e:
+    RENDERING_AVAILABLE = False
+    logger.warning(f"Could not import rendering handlers: {e}")
+    import traceback
+    traceback.print_exc()
+except Exception as e:
+    RENDERING_AVAILABLE = False
+    logger.error(f"Error importing rendering handlers: {e}")
+    import traceback
+    traceback.print_exc()
+
+# Integration handlers (conditionally imported)
+SKETCHFAB_AVAILABLE = False
+try:
+    from handlers.integrations.sketchfab import (
+        GetSketchfabStatusHandler,
+        SearchSketchfabModelsHandler,
+        GetSketchfabModelPreviewHandler,
+        DownloadSketchfabModelHandler
+    )
+    SKETCHFAB_AVAILABLE = True
+    logger.info("Sketchfab handlers imported successfully")
+except ImportError as e:
+    SKETCHFAB_AVAILABLE = False
+    logger.warning(f"Could not import Sketchfab handlers: {e}")
+    import traceback
+    traceback.print_exc()
+except Exception as e:
+    SKETCHFAB_AVAILABLE = False
+    logger.error(f"Error importing Sketchfab handlers: {e}")
+    import traceback
+    traceback.print_exc()
+
 def register_all_handlers():
     """Register all handlers with the command router"""
     logger.info("Registering all handlers...")
@@ -90,5 +132,29 @@ def register_all_handlers():
     # Modeling handlers
     command_router.register_handler(CreatePrimitiveHandler())
     command_router.register_handler(ExtrudeMeshHandler())
+    
+    # Rendering handlers
+    if RENDERING_AVAILABLE:
+        try:
+            command_router.register_handler(SetRenderOutputHandler())
+            command_router.register_handler(GetRenderSettingsHandler())
+            logger.info("Rendering handlers registered")
+        except Exception as e:
+            logger.error(f"Could not register rendering handlers: {e}")
+            import traceback
+            traceback.print_exc()
+    else:
+        logger.warning("Rendering handlers not available - skipping registration")
+    
+    # Integration handlers (always register, but handlers check enablement internally)
+    if SKETCHFAB_AVAILABLE:
+        try:
+            command_router.register_handler(GetSketchfabStatusHandler())
+            command_router.register_handler(SearchSketchfabModelsHandler())
+            command_router.register_handler(GetSketchfabModelPreviewHandler())
+            command_router.register_handler(DownloadSketchfabModelHandler())
+            logger.info("Sketchfab handlers registered")
+        except Exception as e:
+            logger.warning(f"Could not register Sketchfab handlers: {e}")
     
     logger.info(f"Registered {len(command_router.get_registered_commands())} handlers")

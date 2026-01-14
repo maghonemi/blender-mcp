@@ -142,8 +142,15 @@ class BlenderConnection:
             logger.info(f"Response parsed, status: {response.get('status', 'unknown')}")
             
             if response.get("status") == "error":
-                logger.error(f"Blender error: {response.get('message')}")
-                raise Exception(response.get("message", "Unknown error from Blender"))
+                # Handle both old format {"status": "error", "message": "..."} 
+                # and new format {"status": "error", "error": {"message": "..."}}
+                error_obj = response.get("error", {})
+                if isinstance(error_obj, dict):
+                    error_message = error_obj.get("message", response.get("message", "Unknown error from Blender"))
+                else:
+                    error_message = response.get("message", "Unknown error from Blender")
+                logger.error(f"Blender error: {error_message}")
+                raise Exception(error_message)
             
             return response.get("result", {})
         except socket.timeout:
