@@ -123,3 +123,139 @@ DATA_PATH_SCHEMA = {
         "validator": validate_data_path
     }
 }
+
+
+# Additional validators for movie production workflow
+def validate_camera_exists(value: str) -> None:
+    """Validate that a camera object exists in the scene"""
+    import bpy
+    obj = bpy.data.objects.get(value)
+    if not obj:
+        raise ValidationError(f"Camera '{value}' not found in scene")
+    if obj.type != 'CAMERA':
+        raise ValidationError(f"Object '{value}' is not a camera")
+
+
+def validate_light_exists(value: str) -> None:
+    """Validate that a light object exists in the scene"""
+    import bpy
+    obj = bpy.data.objects.get(value)
+    if not obj:
+        raise ValidationError(f"Light '{value}' not found in scene")
+    if obj.type != 'LIGHT':
+        raise ValidationError(f"Object '{value}' is not a light")
+
+
+def validate_armature_exists(value: str) -> None:
+    """Validate that an armature object exists in the scene"""
+    import bpy
+    obj = bpy.data.objects.get(value)
+    if not obj:
+        raise ValidationError(f"Armature '{value}' not found in scene")
+    if obj.type != 'ARMATURE':
+        raise ValidationError(f"Object '{value}' is not an armature")
+
+
+def validate_mesh_exists(value: str) -> None:
+    """Validate that a mesh object exists in the scene"""
+    import bpy
+    obj = bpy.data.objects.get(value)
+    if not obj:
+        raise ValidationError(f"Mesh '{value}' not found in scene")
+    if obj.type != 'MESH':
+        raise ValidationError(f"Object '{value}' is not a mesh")
+
+
+def validate_action_exists(value: str) -> None:
+    """Validate that an action exists"""
+    import bpy
+    if value not in bpy.data.actions:
+        raise ValidationError(f"Action '{value}' not found")
+
+
+def validate_color(value: list) -> None:
+    """Validate that a color value is valid (RGB or RGBA)"""
+    if not isinstance(value, (list, tuple)):
+        raise ValidationError("Color must be a list")
+    if len(value) < 3 or len(value) > 4:
+        raise ValidationError("Color must have 3 (RGB) or 4 (RGBA) values")
+    for v in value:
+        if not isinstance(v, (int, float)) or v < 0 or v > 1:
+            raise ValidationError("Color values must be numbers between 0 and 1")
+
+
+def validate_vector3(value: list) -> None:
+    """Validate that a value is a 3D vector"""
+    if not isinstance(value, (list, tuple)):
+        raise ValidationError("Vector must be a list")
+    if len(value) != 3:
+        raise ValidationError("Vector must have exactly 3 values")
+    for v in value:
+        if not isinstance(v, (int, float)):
+            raise ValidationError("Vector values must be numbers")
+
+
+# Additional common schemas for movie production
+CAMERA_NAME_SCHEMA = {
+    "camera_name": {
+        "type": str,
+        "required": True,
+        "validator": validate_camera_exists
+    }
+}
+
+LIGHT_NAME_SCHEMA = {
+    "light_name": {
+        "type": str,
+        "required": True,
+        "validator": validate_light_exists
+    }
+}
+
+ARMATURE_NAME_SCHEMA = {
+    "armature_name": {
+        "type": str,
+        "required": True,
+        "validator": validate_armature_exists
+    }
+}
+
+MESH_NAME_SCHEMA = {
+    "mesh_name": {
+        "type": str,
+        "required": True,
+        "validator": validate_mesh_exists
+    }
+}
+
+ACTION_NAME_SCHEMA = {
+    "action_name": {
+        "type": str,
+        "required": True,
+        "validator": validate_action_exists
+    }
+}
+
+LOCATION_SCHEMA = {
+    "location": {
+        "type": list,
+        "required": False,
+        "validator": validate_vector3
+    }
+}
+
+ROTATION_SCHEMA = {
+    "rotation": {
+        "type": list,
+        "required": False,
+        "validator": validate_vector3
+    }
+}
+
+COLOR_SCHEMA = {
+    "color": {
+        "type": list,
+        "required": False,
+        "validator": validate_color
+    }
+}
