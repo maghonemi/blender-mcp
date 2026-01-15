@@ -20,7 +20,6 @@ This project is created and maintained by **[IntraZero](https://intrazero.com)**
 ### Resources
 - **Tutorial Video**: [Full Tutorial](https://www.youtube.com/watch?v=lCyQ717DuzQ)
 - **Supporters**: [CodeRabbit](https://www.coderabbit.ai/), [Satish Goda](https://github.com/satishgoda)
-- [Support this project](https://github.com/sponsors/ahujasid)
 
 ---
 
