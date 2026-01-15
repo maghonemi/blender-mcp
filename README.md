@@ -6,15 +6,18 @@ BlenderMCP connects Blender to AI assistants (Claude, Cursor, VS Code) through t
 
 ## Credits
 
-This project is based on the original work by [Siddharth Ahuja](https://github.com/ahujasid). The project has been significantly expanded with comprehensive animation, rigging, rendering, camera, lighting, and modeling capabilities. Special thanks to the original creator for establishing the foundation of this powerful Blender-MCP integration.
+This project is created and maintained by **[IntraZero](https://intrazero.com)**. The project is based on the original work by [Siddharth Ahuja](https://github.com/ahujasid) and has been significantly expanded with comprehensive animation, rigging, rendering, camera, lighting, and modeling capabilities. Special thanks to the original creator for establishing the foundation of this powerful Blender-MCP integration.
+
+### Created By
+- **Company**: [IntraZero](https://intrazero.com)
+- **Website**: https://intrazero.com
 
 ### Original Project
 - **Creator**: Siddharth Ahuja
 - **Original Repository**: [ahujasid/blender-mcp](https://github.com/ahujasid/blender-mcp)
 - **License**: See LICENSE file
 
-### Community & Support
-- **Discord**: [Join the Community](https://discord.gg/z5apgR8TFU)
+### Resources
 - **Tutorial Video**: [Full Tutorial](https://www.youtube.com/watch?v=lCyQ717DuzQ)
 - **Supporters**: [CodeRabbit](https://www.coderabbit.ai/), [Satish Goda](https://github.com/satishgoda)
 - [Support this project](https://github.com/sponsors/ahujasid)
@@ -707,7 +710,7 @@ This is a third-party integration and not made by Blender. This project extends 
 
 ## Support
 
-- **Discord Community**: [Join us](https://discord.gg/z5apgR8TFU)
+- **Company**: [IntraZero](https://intrazero.com)
 - **GitHub Issues**: Report bugs and request features
 - **Documentation**: See spec files (`*_SPEC.md`) for detailed command documentation
 
